@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>IPL Score Prediction</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<!-- <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}" /> -->
+</head>
+<body>
+<script type="text/javascript">
+	function onPageLoad() {
+    console.log( "document loaded" );
+    var batting_url = "/batting";
+	var bowling_url = "/bowling";
+	var venue_url = "/venue";
+	
+    $.get(batting_url,function(data, status) {
+        console.log("got response for get_batting_list request");
+        if(data) {
+            var batting = data.batting;
+            var uibatting = document.getElementById("uibatting");
+            for(var i in batting) {
+                var opt = new Option(batting[i]);
+                $('#uibatting').append(opt);
+            }
+        }
+    });
+	
+	$.get(bowling_url,function(data, status) {
+        console.log("got response for get_bowling_list request");
+        if(data) {
+            var bowling = data.bowling;
+            var uibowling = document.getElementById("uibowling");
+            for(var i in bowling) {
+                var opt = new Option(bowling[i]);
+                $('#uibowling').append(opt);
+            }
+        }
+    });
+	
+	$.get(venue_url,function(data, status) {
+        console.log("got response for get_venue_list request");
+        if(data) {
+            var venue = data.venue;
+            var uivenue = document.getElementById("uivenue");
+            for(var i in venue) {
+                var opt = new Option(venue[i]);
+                $('#uivenue').append(opt);
+            }
+        }
+    });
+  }
+  
+
+window.onload = onPageLoad;
+</script>
+<div>
+	<form method='POST' action="/predict">
+		<div>
+			<label>IPL Batting Team</label><br>
+			<select class="batting" name="batting" id="uibatting" required>
+				<option value="" selected="selected">Choose Batting Team</option>
+			</select>
+		</div><br>
+		<div>
+			<label>IPL Bowling Team</label><br>
+			<select class="bowling" name="bowling" id="uibowling" required>
+				<option value="" selected="selected">Choose Bowling Team</option>
+			</select>
+		</div><br>
+		<div>
+			<label>IPL Venue</label><br>
+			<select class="venue" name="venue" id="uivenue" required>
+				<option value="" selected="selected">Choose Venue Team</option>
+			</select>
+		</div><br>
+		<div>
+			<label>IPL Overs</label><br>
+			<input type='text' class="overs" name="overs" id="uiovers" required>
+		</div><br>
+		<div>
+			<label>Runs</label><br>
+			<input type='text' class="runs" name="runs" id="uiruns" required>
+		</div><br>
+		<div>
+			<label>Wickets</label><br>
+			<input type='text' class="wickets" name="wickets" id="uiwickets" required>
+		</div><br>
+		<div>
+			<label>Runs in Previous 5 Overs</label><br>
+			<input type='text' class="pruns" name="pruns" id="uipruns" required>
+		</div><br>
+		<div>
+			<label>Wickets in Previous 5 Overs</label><br>
+			<input type='text' class="pwickets" name="pwickets" id="uipwickets" required>
+		</div><br>
+		<div>
+			<button type='submit'>Predict Score</button>
+		</div><br><br>
+	</form>
+	<div id='predicted'>{{predicted_score}}</div>
+</div>
+</body>
+</html>
