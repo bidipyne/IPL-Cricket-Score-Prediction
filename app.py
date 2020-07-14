@@ -52,8 +52,9 @@ def predict():
     pruns = int(request.form['pruns'])
     pwickets = int(request.form['pwickets'])
 
-    output = util.score_estimation(runs, wickets, overs, pruns, pwickets, venue, batting, bowling)
-    return render_template('app.html', predicted_score="Predicted score {}".format(output))
+    output1 = util.score_estimation(runs, wickets, overs, pruns, pwickets, venue, batting, bowling)
+    output2 = output1 + int(util.standard_deviation())
+    return render_template('app.html', predicted_score="Predicted score between {} and {}".format(output1,output2))
     #return response
 
 
