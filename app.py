@@ -2,45 +2,42 @@ from flask import Flask, jsonify, request, render_template
 import util
 import sys
 import logging
+import json
 
 app = Flask(__name__)
 
 app.logger.addHandler(logging.StreamHandler(sys.stdout))
 app.logger.setLevel(logging.ERROR)
 
-@app.route('/')
+@app.route('/', methods=['GET'])
 def home():
     return render_template('app.html')
 
 @app.route('/venue', methods=['GET'])
 def get_venue_list():
-    venue_list = util.venue_list()
-    venue_list = [each.title() for each in venue_list]
-    response = jsonify({
-            'venue' : venue_list
-        })
-    response.headers.add('Access-Control-Allow-Origin', '*')
-    return response
+    if request.method == 'GET':
+        venue_list = util.venue_list()
+        venue_list = [each.title() for each in venue_list]
+        response = json.dumps(venue_list, indent=2)
+        #response = jsonify({ 'venue' : venue_list })
+        #response.headers.add('Access-Control-Allow-Origin', '*')
+        return response
 
 @app.route('/batting', methods=['GET'])
 def get_batting_list():
-    batting_list = util.batting_team()
-    batting_list = [each.replace('bat_team_', '').title() for each in batting_list]
-    response = jsonify({
-            'batting' : batting_list
-        })
-    response.headers.add('Access-Control-Allow-Origin', '*')
-    return response
+    if request.method == 'GET':
+        batting_list = util.batting_team()
+        batting_list = [each.replace('bat_team_', '').title() for each in batting_list]
+        response = json.dumps(batting_list, indent=2)
+        return response
 
 @app.route('/bowling', methods=['GET'])
 def get_bowling_list():
-    bowling_list = util.bowling_team()
-    bowling_list = [each.replace('bowl_team_', '').title() for each in bowling_list]
-    response = jsonify({
-            'bowling' : bowling_list
-        })
-    response.headers.add('Access-Control-Allow-Origin', '*')
-    return response
+    if request.method == 'GET':
+        bowling_list = util.bowling_team()
+        bowling_list = [each.replace('bowl_team_', '').title() for each in bowling_list]
+        response = json.dumps(bowling_list, indent=2)
+        return response
 
 @app.route('/predict', methods=['POST'])
 def predict():
