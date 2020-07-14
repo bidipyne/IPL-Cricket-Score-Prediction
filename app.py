@@ -11,13 +11,14 @@ app.logger.setLevel(logging.ERROR)
 
 @app.route('/', methods=['GET'])
 def home():
+    util.load_artifacts()
     return render_template('app.html')
 
 @app.route('/venue', methods=['GET'])
 def get_venue_list():
     if request.method == 'GET':
         venue_list = util.venue_list()
-        app.logger.info('venue_list....'+" ".join(venue_list))
+        app.logger.info('venue_list....'+venue_list)
         venue_list = [each.title() for each in venue_list]
         response = json.dumps(venue_list, indent=2)
         #response = jsonify({ 'venue' : venue_list })
