@@ -41,8 +41,26 @@ def get_bowling_list():
         response = json.dumps(bowling_list, indent=2)
         return response
 
+@app.route('/batsman', methods=['GET'])
+def get_batsman_list():
+    if request.method == 'GET':
+        batsman_list = util.get_batsman()
+        batsman_list = [each.replace(' batsman', '').title() for each in batsman_list]
+        response = json.dumps(batsman_list, indent=2)
+        return response
+    
+@app.route('/bowlers', methods=['GET'])
+def get_bowler_list():
+    if request.method == 'GET':
+        bowler_list = util.get_bowler()
+        bowler_list = [each.replace(' bowler', '').title() for each in bowler_list]
+        response = json.dumps(bowler_list, indent=2)
+        return response
+    
 @app.route('/predict', methods=['POST'])
 def predict():
+    batsman = request.form['batsman']
+    bowler = request.form['bowler']
     batting = request.form['batting']
     bowling = request.form['bowling']
     venue =  request.form['venue']
@@ -52,7 +70,7 @@ def predict():
     pruns = int(request.form['pruns'])
     pwickets = int(request.form['pwickets'])
 
-    output1 = util.score_estimation(runs, wickets, overs, pruns, pwickets, venue, batting, bowling)
+    output1 = util.score_estimation(runs, wickets, overs, pruns, pwickets, batsman, bowler, venue, batting, bowling)
     output2 = output1 + int(util.standard_deviation())
     return render_template('app.html', predicted_score="Predicted score between {} and {}".format(output1,output2))
     #return response

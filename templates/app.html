@@ -18,6 +18,32 @@
     var batting_url = "/batting";
 	var bowling_url = "/bowling";
 	var venue_url = "/venue";
+	var batsman_url = "/batsman";
+	var bowler_url = "/bowlers";
+	
+	$.get(batsman_url,function(data, status) {
+        console.log("got response for get_batsman_list request");
+        if(data) {
+            var batsman = JSON.parse(data);
+            var uibatsman = document.getElementById("uibatsman");
+            for(var i in batsman) {
+                var opt = new Option(batsman[i]);
+                $('#uibatsman').append(opt);
+            }
+        }
+    });
+	
+	$.get(bowler_url,function(data, status) {
+        console.log("got response for get_bowler_list request");
+        if(data) {
+            var bowler = JSON.parse(data);
+            var uibowler = document.getElementById("uibowler");
+            for(var i in bowler) {
+                var opt = new Option(bowler[i]);
+                $('#uibowler').append(opt);
+            }
+        }
+    });
 	
     $.get(batting_url,function(data, status) {
         console.log("got response for get_batting_list request");
@@ -83,6 +109,18 @@ window.onload = onPageLoad;
 		  </select>
 		</div>
 		<div class="form-group">
+		  <label for="batsman">IPL Batsman</label>
+		  <select class="form-control" id="uibatsman" name="batsman">
+			<option value="" selected="selected">Choose Batsman</option>
+		  </select>
+		</div>
+		<div class="form-group">
+		  <label for="bowler">IPL Bowler</label>
+		  <select class="form-control" id="uibowler" name="bowler">
+			<option value="" selected="selected">Choose Bowler</option>
+		  </select>
+		</div>
+		<div class="form-group">
 		  <label for="overs">IPL Overs</label>
 		  <input type="text" class="form-control" id="uiovers" name="overs" placeholder="e.g, 10">
 		</div>
@@ -105,7 +143,6 @@ window.onload = onPageLoad;
 		<button type="submit" class="btn btn-primary">Predict Score</button>	
 	  </fieldset>
 	</form>
-
 	<div id='predicted'><h2>{{predicted_score}}</h2></div>
 </div>
 </body>
